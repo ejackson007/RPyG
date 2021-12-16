@@ -1,18 +1,40 @@
+# Import the pygame module
 import pygame
-from pygame.locals import *
-import sys
-import random
 
-pygame.init() #start game
+# Import pygame.locals for easier access to key coordinates
+# Updated to conform to flake8 and black standards
+from pygame.locals import (
+    K_UP,
+    K_DOWN,
+    K_LEFT,
+    K_RIGHT,
+    K_ESCAPE,
+    KEYDOWN,
+    QUIT,
+)
 
-'''Variables to be used throughout the entire game.
-These dictate the window size. Not sure if it can scale with the screen size'''
+# Initialize pygame
+pygame.init()
 
-vec = pygame.math.Vector2
-HEIGHT = 350
-WIDTH = 700
-ACC = 0.3
-FRIC = -0.10
-FPS = 60
-FPS_CLOCK = pygame.time.Clock()
-COUNT = 0
+# Define constants for the screen width and height
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+# Create the screen object
+# The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+# Function to keep the game running while using it
+running = True
+
+#Main loop
+while running:
+    # Look at every event in the queue
+    for event in pygame.event.get():
+        # Did the user hit a button? 
+        if event.type == KEYDOWN:
+            # Was it the Escape key? If so, stop the loop.
+            if event.key == K_ESCAPE:  
+                running = False
+        elif event.type == QUIT:
+            running = False
+
