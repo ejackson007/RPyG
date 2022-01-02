@@ -1,8 +1,11 @@
 import pygame
 from pygame.locals import *
+import time
+from random import randint
 
-def move_snake(x, y):
-    surface.blit(bg, (0,0))
+def move_snake():
+    surface.blit(bg, (0,40))
+    surface.blit(fruit, (fx,fy))
     '''snake works mostly in the way of follow the leader. This can be implemented by
     simply adding on one in the front and deleting the one in the back since each piece
     of the same size'''
@@ -27,20 +30,51 @@ def add_rib():
     for rib in snake:
         surface.blit(block, (rib[0], rib[1]))
 
+def fruitloc():
+    '''Calculate random locations for the fruit. requirements are that its on the game board, and
+    it has to be on a square that isn't already occupied by the snake'''
+    works = False
+    while not works:
+        fx = (randint(0, 400) % 10) * 40
+        fy = (randint(0, 400) % 10 + 1) * 40
+        if [fx,fy] not in snake:
+            works = True
+    surface.blit(fruit, (fx,fy))
+    return fx, fy
+
+def out_of_bounds():
+    if 0 > snake[-1][0] or snake[-1][0] >= 400:
+        print(True)
+        return True
+    elif 40 > snake[-1][1] or snake[-1][1] >= 440:
+        print(True)
+        return True
+    print(False)
+    return False
 
 if __name__ == "__main__":
     pygame.init()
 
-    surface = pygame.display.set_mode((400,400))
+    surface = pygame.display.set_mode((400,440))
     #set background to white
     surface.fill((110,110,5))
 
     bg = pygame.image.load("resources/background.jpg").convert()
-    surface.blit(bg, (0,0))
+    surface.blit(bg, (0,40))
 
     block = pygame.image.load("resources/block.jpg").convert()
-    #list that stores where the snake is
-    snake = [[0,0], [0,40]]
+    #list that stores each rib in the snake
+    snake = [[0,40], [0,80], [0,120]]
+    #default to moving down
+    x = 0
+    y = 40
+
+    for rib in snake:
+        surface.blit(block, (rib[0], rib[1]))
+    
+    #create fruit, and calculate random locations
+    fruit = pygame.image.load("resources/apple.jpg").convert()
+    fx, fy = fruitloc()
     #update screen
     pygame.display.flip()
     #event loop
@@ -51,15 +85,32 @@ if __name__ == "__main__":
                 if event.key == K_ESCAPE:
                     running == False
                 elif event.key == K_RIGHT:
-                    move_snake(40,0)
+                    x = 40
+                    y = 0
                 elif event.key == K_LEFT:
-                    move_snake(-40,0)
+                    x = -40
+                    y = 0
                 elif event.key == K_UP:
-                    move_snake(0, -40)
+                    x = 0
+                    y = -40
                 elif event.key == K_DOWN:
-                    move_snake(0, 40)
+                    x = 0
+                    y = 40
                 elif event.key == K_SPACE:
                     add_rib()
             elif event.type == QUIT:
                 running = False
-            pygame.display.flip()
+        time.sleep(.15)
+        move_snake()
+        #makes contact with fruit
+        if [fx, fy] in snake:
+            add_rib()
+            fx, fy = fruitloc()
+
+        #losing situation
+        #duplicates means it crossed, or out of range
+        if snake.index(snake[-1]) != (len(snake) - 1) or out_of_bounds():
+            print("game over")
+            running = False
+
+        pygame.display.flip()
