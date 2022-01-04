@@ -11,11 +11,11 @@ def move_snake():
     '''snake works mostly in the way of follow the leader. This can be implemented by
     simply adding on one in the front and deleting the one in the back since each piece
     of the same size'''
-    #print(snake[-1])
+    print(snake[-1])
     snake.append([snake[-1][0] + x, snake[-1][1] + y])
-    #print(snake)
+    print(snake)
     del(snake[0])
-    #print(snake)
+    print(snake)
     for rib in snake:
         surface.blit(block, (rib[0], rib[1]))
 
@@ -26,10 +26,10 @@ def add_rib(score):
 
     move_x = snake[0][0] - snake[1][0]
     move_y = snake[0][1] - snake[1][1]
-    #print(f"adding {move_x} {move_y}")
+    print(f"adding {move_x} {move_y}")
     nrib = [snake[0][0] + move_x, snake[0][1] + move_y]
     snake.insert(0, nrib)
-    #print(snake)
+    print(snake)
     for rib in snake:
         surface.blit(block, (rib[0], rib[1]))
 
@@ -47,12 +47,12 @@ def fruitloc():
 
 def out_of_bounds():
     if 0 > snake[-1][0] or snake[-1][0] >= 400:
-        #print(True)
+        print(True)
         return True
     elif 40 > snake[-1][1] or snake[-1][1] >= 440:
-        #print(True)
+        print(True)
         return True
-    #print(False)
+    print(False)
     return False
 
 if __name__ == "__main__":
